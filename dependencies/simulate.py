@@ -267,9 +267,9 @@ class fMRIsim:
 
         # Convolve HRF with generated R2* signals to get BOLD timeseries
         if self.has_integrator:
-            self.bold = hrf_matrix.X_hrf.dot(self.innovation)
+            self.bold = self.hrf_norm.dot(self.innovation)
         else:
-            self.bold = hrf_matrix.X_hrf.dot(self.r2)
+            self.bold = self.hrf_norm.dot(self.r2)
 
         # Noise
         if self.has_noise:
@@ -277,18 +277,38 @@ class fMRIsim:
         else:
             self.noise = 0
 
-        # # Apply CNR amplitude (DeltaStoS)
-        # if np.max(np.abs(self.bold)) != 0:
-        #     self.bold = self.DeltaStoS*self.S*(self.bold/np.max(np.abs(self.bold)))
+        for te_idx in range(len(self.te)):
+            temp_bold = self.bold[te_idx *
+                                  self.nscans:(te_idx + 1) * self.nscans -
+                                  1, :].copy()
+            temp_noise = self.noise[te_idx *
+                                    self.nscans:(te_idx + 1) * self.nscans -
+                                    1, :].copy()
+            snr_2_update = np.mean(temp_bold) / np.mean(temp_noise)
+            self.simulation[
+                te_idx * self.nscans:(te_idx + 1) * self.nscans -
+                1, :] = temp_bold + temp_noise * snr_2_update / self.snr
+
+        # Apply CNR amplitude (DeltaStoS)
+        # for te_idx in range(len(self.te)):
+        #     if np.max(np.abs(self.bold)) != 0:
+        #         self.bold = self.DeltaStoS * self.S * (
+        #             self.bold / np.max(np.abs(self.bold)))
 
         # Adds gaussian noise to BOLD timeseries
         # self.simulation = self.bold + np.random.normal(0, np.max(self.bold)/self.snr, self.simulation.shape)
-        for te_idx in range(len(self.te)):
-            temp_bold = self.bold[te_idx * self.nscans:(te_idx + 1) *
-                                  self.nscans, :].copy()
-            temp_noise = self.noise[te_idx * self.nscans:(te_idx + 1) *
-                                    self.nscans, :].copy()
-            temp_simulation = temp_bold + (temp_noise * np.max(temp_bold) /
-                                           self.snr)
-            self.simulation[te_idx * self.nscans:(te_idx + 1) *
-                            self.nscans, :] = temp_simulation.copy()
+        # for te_idx in range(len(self.te)):
+        #     temp_bold = self.bold[te_idx *
+        #                           self.nscans:(te_idx + 1) * self.nscans -
+        #                           1, :].copy()
+        #     temp_bold = self.DeltaStoS * self.S * (temp_bold /
+        #                                            np.max(np.abs(temp_bold)))
+        #     self.bold[te_idx * self.nscans:(te_idx + 1) * self.nscans -
+        #               1, :] = temp_bold.copy()
+        #     temp_noise = self.noise[te_idx *
+        #                             self.nscans:(te_idx + 1) * self.nscans -
+        #                             1, :].copy()
+        #     temp_simulation = temp_bold + temp_noise
+        #     self.simulation[te_idx * self.nscans:(te_idx + 1) * self.nscans -
+        #                     1, :] = temp_simulation.copy() / np.mean(
+        #                         temp_simulation)
