@@ -5,7 +5,7 @@ from dependencies.hrf_matrix import HRFMatrix
 
 def _gram_schmidt_columns(X):
     Q, R = np.linalg.qr(X)
-    return (Q)
+    return Q
 
 
 class fMRIsim:
@@ -139,13 +139,13 @@ class fMRIsim:
         # Sum of noise from different sources
         noise = n_physio + n_thermal + n_motion
 
-        # Concatenate noise for multi echo design
-        if len(self.te) > 1:
-            temp = noise.copy()
-            for i in range(len(self.te) - 1):
-                noise = np.append(noise, temp, 0)
+        # # Concatenate noise for multi echo design
+        # if len(self.te) > 1:
+        #     temp = noise.copy()
+        #     for i in range(len(self.te) - 1):
+        #         noise = np.append(noise, temp, 0)
 
-        return (noise)
+        return noise
 
     def simulate(self):
 
@@ -157,6 +157,7 @@ class fMRIsim:
         self.bold = self.simulation.copy()
         self.r2 = np.zeros((self.nscans, self.nvoxels))
         self.innovation = self.r2.copy()
+        self.noise = self.bold.copy()
 
         if self.length == 'mix':
             ev_list = ['short', 'medium', 'long']
@@ -271,23 +272,23 @@ class fMRIsim:
         else:
             self.bold = self.hrf_norm.dot(self.r2)
 
-        # Noise
-        if self.has_noise:
-            self.noise = self._add_noise()
-        else:
-            self.noise = 0
-
         for te_idx in range(len(self.te)):
-            temp_bold = self.bold[te_idx *
-                                  self.nscans:(te_idx + 1) * self.nscans -
-                                  1, :].copy()
-            temp_noise = self.noise[te_idx *
-                                    self.nscans:(te_idx + 1) * self.nscans -
-                                    1, :].copy()
+            temp_bold = self.bold[te_idx * self.nscans:(te_idx + 1) *
+                                  self.nscans, :].copy()
+            # Noise
+            if self.has_noise:
+                temp_noise = self._add_noise()
+            else:
+                temp_noise = 0
+
+            self.noise[te_idx * self.nscans:(te_idx + 1) *
+                       self.nscans, :] = np.dot(temp_noise,
+                                                np.ones((1, self.nvoxels)))
+
             snr_2_update = np.mean(temp_bold) / np.mean(temp_noise)
             self.simulation[
-                te_idx * self.nscans:(te_idx + 1) * self.nscans -
-                1, :] = temp_bold + temp_noise * snr_2_update / self.snr
+                te_idx * self.nscans:(te_idx + 1) * self.
+                nscans, :] = temp_bold + temp_noise * snr_2_update / self.snr
 
         # Apply CNR amplitude (DeltaStoS)
         # for te_idx in range(len(self.te)):

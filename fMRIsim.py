@@ -99,7 +99,7 @@ def main(argv):
         type=float,
         help=
         'Amount of SNR to simulate (default=10.0). Mind that the default value is high., i.e. the amount of noise is very little.',
-        default=50,
+        default=10,
         nargs=1)
 
     parser.add_argument('--filename',
@@ -197,11 +197,24 @@ def main(argv):
         shutil.rmtree(foldername)  # Remove dir for a clean start
         os.makedirs(foldername)  # Generate new dir
 
-    # Saving simulation
-    vol.export_volume(sim.simulation, dims, foldername,
-                      args.filename + '_data', history)
-    vol.export_volume(sim.bold, dims, foldername, args.filename + '_bold',
-                      history)
+    # Saving simulations
+    for te_idx in range(len(sim.te)):
+        # Each of the TE data
+        temp_sim = sim.simulation[te_idx *
+                                  sim.nscans:(te_idx + 1) * sim.nscans -
+                                  1, :].copy()
+        vol.export_volume(
+            temp_sim, dims, foldername,
+            '{}_data_E0{}'.format(args.filename, str(te_idx + 1)), history)
+
+        # Each of the TE BOLD data
+        temp_bold = sim.bold[te_idx * sim.nscans:(te_idx + 1) * sim.nscans -
+                             1, :].copy()
+        vol.export_volume(
+            temp_bold, dims, foldername,
+            '{}_bold_E0{}'.format(args.filename, str(te_idx + 1)), history)
+
+    # Non TE dependent data
     vol.export_volume(sim.r2, dims, foldername, args.filename + '_r2', history)
     vol.export_volume(sim.innovation, dims, foldername,
                       args.filename + '_innovation', history)
