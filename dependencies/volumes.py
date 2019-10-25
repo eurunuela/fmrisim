@@ -5,10 +5,17 @@ import subprocess
 
 def reshape2Dto4D(signal2d, dims):
 
-    signal4d = np.reshape(signal2d,
+    signal4d = np.zeros((dims[0] * dims[1] * dims[2], signal2d.shape[0]))
+
+    # Merges signal on mask indices with blank image
+    for i in range(signal2d.shape[0]):
+        signal4d[:, i] = signal2d[i, :]
+
+    # Reshapes matrix from 2D to 4D double
+    signal4d = np.reshape(signal4d,
                           (dims[0], dims[1], dims[2], signal2d.shape[0]))
 
-    return (signal4d)
+    return signal4d
 
 
 def generate_header(dims, path):
@@ -23,16 +30,16 @@ def read_header(path, filename):
 
     header_filename = '{}/{}'.format(path, filename)
 
-    return (nib.load(header_filename).header)
+    return nib.load(header_filename).header
 
 
-def export_volume(vol, dims, path, filename, history):
+def export_volume(vol_2d, dims, path, filename, history):
 
     # Append nscans to dims
-    dims = np.append(dims, vol.shape[0])
+    dims = np.append(dims, vol_2d.shape[0])
 
     # 2D to 4D
-    vol_4d = reshape2Dto4D(vol, dims)
+    vol_4d = reshape2Dto4D(vol_2d, dims)
 
     # Generate header file
     generate_header(dims, path)

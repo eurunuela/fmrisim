@@ -200,26 +200,31 @@ def main(argv):
     # Saving simulations
     for te_idx in range(len(sim.te)):
         # Each of the TE data
-        temp_sim = sim.simulation[te_idx *
-                                  sim.nscans:(te_idx + 1) * sim.nscans -
-                                  1, :].copy()
+        temp_sim = sim.simulation[te_idx * sim.nscans:(te_idx + 1) *
+                                  sim.nscans, :].copy()
         vol.export_volume(
             temp_sim, dims, foldername,
             '{}_data_E0{}'.format(args.filename, str(te_idx + 1)), history)
 
         # Each of the TE BOLD data
-        temp_bold = sim.bold[te_idx * sim.nscans:(te_idx + 1) * sim.nscans -
-                             1, :].copy()
+        temp_bold = sim.bold[te_idx * sim.nscans:(te_idx + 1) *
+                             sim.nscans, :].copy()
         vol.export_volume(
             temp_bold, dims, foldername,
             '{}_bold_E0{}'.format(args.filename, str(te_idx + 1)), history)
+
+        # Each of the TE BOLD data
+        temp_noise = sim.noise[te_idx * sim.nscans:(te_idx + 1) *
+                               sim.nscans, :].copy()
+
+        vol.export_volume(
+            temp_noise, dims, foldername,
+            '{}_noise_E0{}'.format(args.filename, str(te_idx + 1)), history)
 
     # Non TE dependent data
     vol.export_volume(sim.r2, dims, foldername, args.filename + '_r2', history)
     vol.export_volume(sim.innovation, dims, foldername,
                       args.filename + '_innovation', history)
-    vol.export_volume(np.repeat(sim.noise, sim.nvoxels, axis=1), dims,
-                      foldername, args.filename + '_noise', history)
 
     if args.npy:
         np.save('{}/{}_data'.format(foldername, args.filename),
