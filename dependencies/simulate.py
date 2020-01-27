@@ -166,35 +166,18 @@ class fMRIsim:
         group_change_idxs[1:] = np.cumsum(self.group) - 1
         group_label = 0
 
-        for voxidx in range(self.nvoxels):
-            if voxidx == group_change_idxs[group_label]:
-                idx_avail = np.arange(2, self.nscans)
-                group_label += 1
-                for eventidx in range(self.nevents):
-                    if self.max_length and self.min_length:
-                        temp_len = np.random.randint(self.min_length,
-                                                     self.max_length)
-                        temp_pos = int(
-                            random.choice(idx_avail[:len(idx_avail) -
-                                                    temp_len]))
-                        self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
-                        idx_pos = np.where(idx_avail == temp_pos)[0]
-                        idx_sel = np.arange(idx_pos - 2,
-                                            idx_pos + temp_len + 2)
-                        np.delete(idx_avail, idx_sel)
-                    else:
-                        if self.length == 'mix':
-                            ev_len = random.choice(ev_list)
-                        else:
-                            ev_len = self.length
+        print(f'Groups: {self.group}')
+        print(f'Group change idxs: {group_change_idxs}')
 
-                        if ev_len == 'short':  # Event length [1,1%]
-                            if self.max_length is None:
-                                if np.ceil(0.01 * self.nscans) > 1:
-                                    self.max_length = 0.01 * self.nscans
-                                else:
-                                    self.max_length = 2
-                            temp_len = np.random.randint(1, self.max_length)
+        for voxidx in range(self.nvoxels):
+            if group_label < len(group_change_idxs):
+                if voxidx == group_change_idxs[group_label]:
+                    idx_avail = np.arange(2, self.nscans)
+                    group_label += 1
+                    for eventidx in range(self.nevents):
+                        if self.max_length and self.min_length:
+                            temp_len = np.random.randint(self.min_length,
+                                                        self.max_length)
                             temp_pos = int(
                                 random.choice(idx_avail[:len(idx_avail) -
                                                         temp_len]))
@@ -203,40 +186,61 @@ class fMRIsim:
                             idx_sel = np.arange(idx_pos - 2,
                                                 idx_pos + temp_len + 2)
                             np.delete(idx_avail, idx_sel)
-                        elif ev_len == 'medium':  # Event length [1%, 5%]
-                            if self.max_length is None:
-                                self.max_length = np.ceil(0.1 * self.nscans)
-                            temp_len = np.random.randint(
-                                np.ceil(0.05 * self.nscans), self.max_length)
-                            temp_pos = int(
-                                random.choice(idx_avail[:len(idx_avail) -
-                                                        temp_len]))
-                            idx_pos = np.where(idx_avail == temp_pos)[0]
-                            while (idx_avail[idx_pos + temp_len] -
-                                   idx_avail[idx_pos]) > temp_len:
-                                temp_len -= 1
-                            self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
-                            idx_sel = np.arange(idx_pos - 2,
-                                                idx_pos + temp_len + 2)
-                            np.delete(idx_avail, idx_sel)
-                        elif ev_len == 'long':  # Event length [5% 10%]
-                            if self.max_length is None:
-                                self.max_length = np.ceil(0.1 * self.nscans)
-                            temp_len = np.random.randint(
-                                np.ceil(0.05 * self.nscans), self.max_length)
-                            temp_pos = int(
-                                random.choice(idx_avail[:len(idx_avail) -
-                                                        temp_len]))
-                            idx_pos = np.where(idx_avail == temp_pos)[0]
-                            while (idx_avail[idx_pos + temp_len] -
-                                   idx_avail[idx_pos]) > temp_len:
-                                temp_len -= 1
-                            self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
-                            idx_sel = np.arange(idx_pos - 2,
-                                                idx_pos + temp_len + 2)
-                            np.delete(idx_avail, idx_sel)
-            else:
-                self.r2[:, voxidx] = self.r2[:, voxidx - 1].copy()
+                        else:
+                            if self.length == 'mix':
+                                ev_len = random.choice(ev_list)
+                            else:
+                                ev_len = self.length
+
+                            if ev_len == 'short':  # Event length [1,1%]
+                                if self.max_length is None:
+                                    if np.ceil(0.01 * self.nscans) > 1:
+                                        self.max_length = 0.01 * self.nscans
+                                    else:
+                                        self.max_length = 2
+                                temp_len = np.random.randint(1, self.max_length)
+                                temp_pos = int(
+                                    random.choice(idx_avail[:len(idx_avail) -
+                                                            temp_len]))
+                                self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
+                                idx_pos = np.where(idx_avail == temp_pos)[0]
+                                idx_sel = np.arange(idx_pos - 2,
+                                                    idx_pos + temp_len + 2)
+                                np.delete(idx_avail, idx_sel)
+                            elif ev_len == 'medium':  # Event length [1%, 5%]
+                                if self.max_length is None:
+                                    self.max_length = np.ceil(0.1 * self.nscans)
+                                temp_len = np.random.randint(
+                                    np.ceil(0.05 * self.nscans), self.max_length)
+                                temp_pos = int(
+                                    random.choice(idx_avail[:len(idx_avail) -
+                                                            temp_len]))
+                                idx_pos = np.where(idx_avail == temp_pos)[0]
+                                while (idx_avail[idx_pos + temp_len] -
+                                    idx_avail[idx_pos]) > temp_len:
+                                    temp_len -= 1
+                                self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
+                                idx_sel = np.arange(idx_pos - 2,
+                                                    idx_pos + temp_len + 2)
+                                np.delete(idx_avail, idx_sel)
+                            elif ev_len == 'long':  # Event length [5% 10%]
+                                if self.max_length is None:
+                                    self.max_length = np.ceil(0.1 * self.nscans)
+                                temp_len = np.random.randint(
+                                    np.ceil(0.05 * self.nscans), self.max_length)
+                                temp_pos = int(
+                                    random.choice(idx_avail[:len(idx_avail) -
+                                                            temp_len]))
+                                idx_pos = np.where(idx_avail == temp_pos)[0]
+                                while (idx_avail[idx_pos + temp_len] -
+                                    idx_avail[idx_pos]) > temp_len:
+                                    temp_len -= 1
+                                self.r2[temp_pos:temp_pos + temp_len, voxidx] = 1
+                                idx_sel = np.arange(idx_pos - 2,
+                                                    idx_pos + temp_len + 2)
+                                np.delete(idx_avail, idx_sel)
+                else:
+                    self.r2[:, voxidx] = self.r2[:, voxidx - 1].copy()
 
             print('Voxel {}/{} simulated...'.format(voxidx + 1, self.nvoxels))
 

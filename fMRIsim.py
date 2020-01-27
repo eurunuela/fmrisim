@@ -173,6 +173,8 @@ def main(argv):
         sim.group = args.group
     elif sim.nvoxels > 1 and args.group == 1:
         sim.group = sim.nvoxels
+    else:
+        sim.group = args.group
     try:
         sim.ngroups = len(sim.group)
     except:
