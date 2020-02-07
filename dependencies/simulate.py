@@ -26,7 +26,8 @@ class fMRIsim:
                  max_length=None,
                  min_length=None,
                  group=1,
-                 ngroups=1):
+                 ngroups=1,
+                 motion=0.05):
 
         # Parameters for signal creation
         self.length = event_length
@@ -50,10 +51,11 @@ class fMRIsim:
         self.tesla = tesla
         self.has_noise = noise
         self.snr = snr
+        self.percent_motion = motion
 
     def _add_noise(self):
         # Noise due to motion
-        percent_motion = 0.05  # percentage of noise that it is due to motion
+        self.percent_motion = 0.05  # percentage of noise that it is due to motion
         motion_par = np.random.randn(6, 1)
         regpar_mtx = np.genfromtxt('dependencies/regparam.1D')
         regpar_mtx = regpar_mtx[0:self.nscans, :]
@@ -94,8 +96,8 @@ class fMRIsim:
         # vascular system AND motion from subtle brain pulsability.
         # So sigma_physionoise is divided in two terms: physiological sinusoidal
         # fluctuations and motion.
-        sigma_motion = np.sqrt(percent_motion) * sigma_physionoise
-        sigma_physionoise = np.sqrt(1 - percent_motion) * sigma_physionoise
+        sigma_motion = np.sqrt(self.percent_motion) * sigma_physionoise
+        sigma_physionoise = np.sqrt(1 - self.percent_motion) * sigma_physionoise
 
         # generate thermal noise signals
         n_thermal = np.random.randn(self.nscans, 1)
@@ -170,7 +172,7 @@ class fMRIsim:
         print(f'Group change idxs: {group_change_idxs}')
 
         for voxidx in range(self.nvoxels):
-            if group_label < len(group_change_idxs):
+            if group_label < len(group_change_idxs) - 1:
                 if voxidx == group_change_idxs[group_label]:
                     idx_avail = np.arange(2, self.nscans)
                     group_label += 1
@@ -289,8 +291,14 @@ class fMRIsim:
                        self.nscans, :] = temp_noise
 
             snr_2_update = np.mean(temp_bold) / np.mean(temp_noise)
-            self.simulation[
-                te_idx * self.nscans:(te_idx + 1) * self.
-                nscans, :] = temp_bold + temp_noise * snr_2_update / self.snr
+
+            if self.has_noise:
+                self.simulation[
+                    te_idx * self.nscans:(te_idx + 1) * self.
+                    nscans, :] = temp_bold + temp_noise * snr_2_update / self.snr
+            else:
+                self.simulation[
+                    te_idx * self.nscans:(te_idx + 1) * self.
+                    nscans, :] = temp_bold
 
             del temp_noise, temp_bold
