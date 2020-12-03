@@ -3,7 +3,7 @@ import datetime
 import getpass
 import socket
 
-from fMRIsim import fMRIsim
+from fMRIsim import __version__
 
 
 def _get_parser():
@@ -224,6 +224,8 @@ def _get_parser():
         ),
         default=False,
     )
+    optoptions.add_argument('-v', '--version', action='version',
+                          version=('%(prog)s ' + __version__))
 
     return parser
 
