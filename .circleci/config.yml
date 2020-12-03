@@ -9,7 +9,7 @@ jobs:
 
   makeenv_37:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -37,7 +37,7 @@ jobs:
 
   unittest_36:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -70,7 +70,7 @@ jobs:
 
   unittest_37:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -91,7 +91,7 @@ jobs:
 
   integrationtest_36:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -123,7 +123,7 @@ jobs:
 
   integrationtest_37:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -147,7 +147,7 @@ jobs:
 
   style_check:
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -184,7 +184,7 @@ jobs:
   merge_coverage:
     working_directory: /tmp/src/fMRIsim
     docker:
-      - image: afni/afni
+      - image: afni/afni_circleci_executor
     steps:
       - attach_workspace:
           at: /tmp
