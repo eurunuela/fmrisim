@@ -23,7 +23,7 @@ def generate_header(dims, path):
 
     subprocess.run(
         "3dEmpty -nxyz {} {} {} -nt {} -prefix {}/{} -overwrite".format(
-            dims[0], dims[1], dims[2], dims[3], path, "empty"
+            dims[0], dims[1], dims[2], dims[3], path, "empty.nii.gz"
         ),
         shell=True,
     )
@@ -48,7 +48,7 @@ def export_volume(vol_2d, dims, path, filename, history):
     generate_header(dims, path)
 
     # Read header file
-    header = read_header(path, "empty+orig.HEAD")
+    header = read_header(path, "empty.nii.gz")
 
     print("Saving image...")
     img = nib.nifti1.Nifti1Image(vol_4d, None, header=header)
