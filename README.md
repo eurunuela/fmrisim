@@ -1,7 +1,7 @@
 # fMRIsim
 
 [![codecov](https://codecov.io/gh/eurunuela/fMRIsim/branch/master/graph/badge.svg)](https://codecov.io/gh/eurunuela/fMRIsim)
-[![CircleCI](https://circleci.com/gh/eurunuela/fMRIsim.svg?branch=master&style=shield)](https://circleci.com/gh/eurunuela/fMRIsim)
+[![CircleCI](https://circleci.com/gh/eurunuela/fmrisim.svg?branch=master&style=shield)](https://circleci.com/gh/eurunuela/fmrisim)
 
 Python toolbox to simulate fMRI signals containting neuronal activity and various types of noise.
 
