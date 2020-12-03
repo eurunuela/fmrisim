@@ -247,7 +247,8 @@ class fMRIsim:
                                         self.max_length = np.ceil(0.1 * self.nscans)
                                     if np.ceil(0.05 * self.nscans) >= self.max_length:
                                         temp_len = np.random.randint(
-                                            np.ceil(0.25 * self.max_length), self.max_length
+                                            np.ceil(0.25 * self.max_length),
+                                            self.max_length,
                                         )
                                     else:
                                         temp_len = np.random.randint(
@@ -274,7 +275,8 @@ class fMRIsim:
                                         self.max_length = np.ceil(0.1 * self.nscans)
                                     if np.ceil(0.05 * self.nscans) >= self.max_length:
                                         temp_len = np.random.randint(
-                                            np.ceil(0.25 * self.max_length), self.max_length
+                                            np.ceil(0.25 * self.max_length),
+                                            self.max_length,
                                         )
                                     else:
                                         temp_len = np.random.randint(
