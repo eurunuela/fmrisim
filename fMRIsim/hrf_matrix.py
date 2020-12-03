@@ -98,7 +98,7 @@ class HRFMatrix:
         has_integrator=False,
         wfusion=False,
         lambda_fusion=3,
-        gamma_weights=0.5
+        gamma_weights=0.5,
     ):
         self.TR = TR
         self.TE = TE
@@ -108,7 +108,6 @@ class HRFMatrix:
         self.is_afni = is_afni
         self.hrf_path = path
         self.has_integrator = has_integrator
-
 
     def generate_hrf(self):
 
@@ -160,8 +159,6 @@ class HRFMatrix:
                     ] = np.matmul(temp, np.tril(np.ones(self.nscans)))
             else:
                 self.hrf = np.matmul(self.hrf, np.tril(np.ones(self.nscans)))
-                self.hrf_norm = np.matmul(
-                    self.hrf_norm, np.tril(np.ones(self.nscans))
-                )
+                self.hrf_norm = np.matmul(self.hrf_norm, np.tril(np.ones(self.nscans)))
 
         return self
