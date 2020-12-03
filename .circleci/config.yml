@@ -10,7 +10,7 @@ jobs:
   makeenv_37:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - persist_to_workspace:
@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            if [[ -e /opt/conda/envs/py36_env ]]; then
+            if [[ -e /opt/miniconda-latest/envs/py36_env ]]; then
               echo "Restoring environment from cache"
                 source activate fMRIsim_py37
             else
@@ -33,12 +33,12 @@ jobs:
       - save_cache:
           key: conda-py37-v1-{{ checksum "setup.cfg" }}
           paths:
-              - /opt/conda/envs/fMRIsim_py37
+              - /opt/miniconda-latest/envs/fMRIsim_py37
 
   unittest_36:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -47,7 +47,7 @@ jobs:
           name: Generate environment
           command: |
             # apt-get install -yqq make
-            if [ ! -d /opt/conda/envs/fMRIsim_py36 ]; then
+            if [ ! -d /opt/miniconda-latest/envs/fMRIsim_py36 ]; then
               conda create -yq -n fMRIsim_py36 python=3.6
               source activate fMRIsim_py36
               pip install -e ".[test]"
@@ -57,12 +57,12 @@ jobs:
           command: |
             source activate fMRIsim_py36
             make unittest
-            mkdir /work/coverage
-            mv /work/fMRIsim/.coverage /work/coverage/.coverage.py36
+            mkdir /tmp/src/coverage
+            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.py36
       - save_cache:
           key: conda-py36-v1-{{ checksum "setup.cfg" }}
           paths:
-              - /opt/conda/envs/fMRIsim_py36
+              - /opt/miniconda-latest/envs/fMRIsim_py36
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -71,7 +71,7 @@ jobs:
   unittest_37:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -82,8 +82,8 @@ jobs:
             # apt-get install -yqq make
             source activate fMRIsim_py37  # depends on makeenv_37
             make unittest
-            mkdir /work/coverage
-            mv /work/fMRIsim/.coverage /work/coverage/.coverage.py37
+            mkdir /tmp/src/coverage
+            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.py37
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -92,7 +92,7 @@ jobs:
   integrationtest_36:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -101,7 +101,7 @@ jobs:
           name: Generate environment
           command: |
             # apt-get install -yqq make
-            if [ ! -d /opt/conda/envs/fMRIsim_py36 ]; then
+            if [ ! -d /opt/miniconda-latest/envs/fMRIsim_py36 ]; then
               conda create -yq -n fMRIsim_py36 python=3.6
               source activate fMRIsim_py36
               pip install -e ".[test]"
@@ -112,8 +112,8 @@ jobs:
           command: |
             source activate fMRIsim_py36
             make integration
-            mkdir /work/coverage
-            mv /work/fMRIsim/.coverage /work/coverage/.coverage.integration36
+            mkdir /tmp/src/coverage
+            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.integration36
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
@@ -124,7 +124,7 @@ jobs:
   integrationtest_37:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -136,8 +136,8 @@ jobs:
             # apt-get install -yqq make
             source activate fMRIsim_py37  # depends on makeenv_37
             make integration
-            mkdir /work/coverage
-            mv /work/fMRIsim/.coverage /work/coverage/.coverage.integration37
+            mkdir /tmp/src/coverage
+            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.integration37
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
@@ -148,7 +148,7 @@ jobs:
   style_check:
     docker:
       - image: nipype/nipype
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -163,7 +163,7 @@ jobs:
           path: /tmp/data/lint
 
   # build_docs:
-  #   working_directory: /work/fMRIsim
+  #   working_directory: /tmp/src/fMRIsim
   #   docker:
   #     - image: nipype/nipype
   #   steps:
@@ -179,10 +179,10 @@ jobs:
   #           pip install sphinx_rtd_theme
   #           make -C docs html
   #     - store_artifacts:
-  #         path: /work/fMRIsim/docs/_build/html
+  #         path: /tmp/src/fMRIsim/docs/_build/html
 
   merge_coverage:
-    working_directory: /work/fMRIsim
+    working_directory: /tmp/src/fMRIsim
     docker:
       - image: nipype/nipype
     steps:
@@ -196,13 +196,13 @@ jobs:
           command: |
             apt-get install -yqq curl
             source activate fMRIsim_py37  # depends on makeenv37
-            cd /work/coverage/
+            cd /tmp/src/coverage/
             coverage combine
             coverage xml
       - store_artifacts:
-          path: /work/coverage
+          path: /tmp/src/coverage
       - codecov/upload:
-          file: /work/coverage/coverage.xml
+          file: /tmp/src/coverage/coverage.xml
 
 workflows:
   version: 2.1
