@@ -30,6 +30,8 @@ def generate_header(dims, path):
         shell=True,
     )
 
+    print(os.listdir(path))
+
 
 def read_header(path, filename):
 
