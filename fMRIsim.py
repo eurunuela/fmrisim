@@ -98,7 +98,7 @@ def main(argv):
         '--snr',
         type=float,
         help=
-        'Amount of SNR to simulate (default=10.0). Mind that the default value is high., i.e. the amount of noise is very little.',
+        'Amount of db to simulate (default=10.0). Mind that the default value is high., i.e. the amount of noise is very little.',
         default=10,
         nargs=1)
 
@@ -163,10 +163,10 @@ def main(argv):
         sim.tesla = args.tesla[0]
     else:
         sim.tesla = args.tesla
-    if type(args.snr) is list:
-        sim.snr = args.snr[0]
+    if type(args.db) is list:
+        sim.db = args.snr[0]
     else:
-        sim.snr = args.snr
+        sim.db = args.snr
     if args.no_noise:
         sim.has_noise = False
     if sim.nvoxels == 1 and args.group == 1:
