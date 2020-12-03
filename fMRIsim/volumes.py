@@ -21,6 +21,8 @@ def reshape2Dto4D(signal2d, dims):
 
 def generate_header(dims, path):
 
+    print(path)
+
     subprocess.run(
         "3dEmpty -nxyz {} {} {} -nt {} -prefix {}/{} -overwrite".format(
             dims[0], dims[1], dims[2], dims[3], path, "empty.nii.gz"
