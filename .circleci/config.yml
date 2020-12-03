@@ -10,7 +10,7 @@ jobs:
   makeenv_37:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - persist_to_workspace:
@@ -38,7 +38,7 @@ jobs:
   unittest_36:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -57,8 +57,8 @@ jobs:
           command: |
             source activate fMRIsim_py36
             make unittest
-            mkdir /tmp/src/coverage
-            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.py36
+            mkdir /work/coverage
+            mv /work/fMRIsim/.coverage /work/coverage/.coverage.py36
       - save_cache:
           key: conda-py36-v1-{{ checksum "setup.cfg" }}
           paths:
@@ -71,7 +71,7 @@ jobs:
   unittest_37:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -82,8 +82,8 @@ jobs:
             # apt-get install -yqq make
             source activate fMRIsim_py37  # depends on makeenv_37
             make unittest
-            mkdir /tmp/src/coverage
-            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.py37
+            mkdir /work/coverage
+            mv /work/fMRIsim/.coverage /work/coverage/.coverage.py37
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -92,7 +92,7 @@ jobs:
   integrationtest_36:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -112,8 +112,8 @@ jobs:
           command: |
             source activate fMRIsim_py36
             make integration
-            mkdir /tmp/src/coverage
-            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.integration36
+            mkdir /work/coverage
+            mv /work/fMRIsim/.coverage /work/coverage/.coverage.integration36
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
@@ -124,7 +124,7 @@ jobs:
   integrationtest_37:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -136,8 +136,8 @@ jobs:
             # apt-get install -yqq make
             source activate fMRIsim_py37  # depends on makeenv_37
             make integration
-            mkdir /tmp/src/coverage
-            mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.integration37
+            mkdir /work/coverage
+            mv /work/fMRIsim/.coverage /work/coverage/.coverage.integration37
       - store_artifacts:
           path: /tmp/data
       - persist_to_workspace:
@@ -148,7 +148,7 @@ jobs:
   style_check:
     docker:
       - image: nipype/nipype
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     steps:
       - checkout
       - restore_cache:
@@ -163,7 +163,7 @@ jobs:
           path: /tmp/data/lint
 
   # build_docs:
-  #   working_directory: /tmp/src/fMRIsim
+  #   working_directory: /work/fMRIsim
   #   docker:
   #     - image: nipype/nipype
   #   steps:
@@ -179,10 +179,10 @@ jobs:
   #           pip install sphinx_rtd_theme
   #           make -C docs html
   #     - store_artifacts:
-  #         path: /tmp/src/fMRIsim/docs/_build/html
+  #         path: /work/fMRIsim/docs/_build/html
 
   merge_coverage:
-    working_directory: /tmp/src/fMRIsim
+    working_directory: /work/fMRIsim
     docker:
       - image: nipype/nipype
     steps:
@@ -196,13 +196,13 @@ jobs:
           command: |
             apt-get install -yqq curl
             source activate fMRIsim_py37  # depends on makeenv37
-            cd /tmp/src/coverage/
+            cd /work/coverage/
             coverage combine
             coverage xml
       - store_artifacts:
-          path: /tmp/src/coverage
+          path: /work/coverage
       - codecov/upload:
-          file: /tmp/src/coverage/coverage.xml
+          file: /work/coverage/coverage.xml
 
 workflows:
   version: 2.1
