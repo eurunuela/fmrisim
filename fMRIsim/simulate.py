@@ -245,9 +245,14 @@ class fMRIsim:
                                 elif ev_len == "medium":  # Event length [1%, 5%]
                                     if self.max_length is None:
                                         self.max_length = np.ceil(0.1 * self.nscans)
-                                    temp_len = np.random.randint(
-                                        np.ceil(0.05 * self.nscans), self.max_length
-                                    )
+                                    if np.ceil(0.05 * self.nscans) >= self.max_length:
+                                        temp_len = np.random.randint(
+                                            np.ceil(0.25 * self.max_length), self.max_length
+                                        )
+                                    else:
+                                        temp_len = np.random.randint(
+                                            np.ceil(0.05 * self.nscans), self.max_length
+                                        )
                                     temp_pos = int(
                                         random.choice(
                                             idx_avail[: len(idx_avail) - temp_len]
@@ -267,9 +272,14 @@ class fMRIsim:
                                 elif ev_len == "long":  #  Event length [5% 10%]
                                     if self.max_length is None:
                                         self.max_length = np.ceil(0.1 * self.nscans)
-                                    temp_len = np.random.randint(
-                                        np.ceil(0.05 * self.nscans), self.max_length
-                                    )
+                                    if np.ceil(0.05 * self.nscans) >= self.max_length:
+                                        temp_len = np.random.randint(
+                                            np.ceil(0.25 * self.max_length), self.max_length
+                                        )
+                                    else:
+                                        temp_len = np.random.randint(
+                                            np.ceil(0.05 * self.nscans), self.max_length
+                                        )
                                     temp_pos = int(
                                         random.choice(
                                             idx_avail[: len(idx_avail) - temp_len]
