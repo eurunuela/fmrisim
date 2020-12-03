@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import os
 import shutil
-import sys
 
 import numpy as np
 
@@ -71,10 +70,10 @@ def fMRIsim_workflow(
 
     # Check if temp directory exists
     if not os.path.exists(out_dir):
-        os.makedirs(out_dir)  # Generate new dir
+        os.mkdir(out_dir)  # Generate new dir
     else:
         shutil.rmtree(out_dir)  # Remove dir for a clean start
-        os.makedirs(out_dir)  # Generate new dir
+        os.mkdir(out_dir)  # Generate new dir
 
     # Saving simulations
     for te_idx in range(len(sim.te)):
@@ -118,12 +117,12 @@ def fMRIsim_workflow(
     vol.export_volume(sim.innovation, dims, out_dir, out_file + "_innovation", history)
 
     if npy:
-        np.save("{}/{}_data".format(out_dir, out_file), sim.simulation)  # Data
-        np.save("{}/{}_bold".format(out_dir, out_file), sim.bold)  # BOLD
-        np.save("{}/{}_noise".format(out_dir, out_file), sim.noise)  # Noise
-        np.save("{}/{}_r2".format(out_dir, out_file), sim.r2)  # R2
+        np.save(os.path.join(out_dir, f"{out_file}_data"), sim.simulation)  # Data
+        np.save(os.path.join(out_dir, f"{out_file}_bold"), sim.bold)  # BOLD
+        np.save(os.path.join(out_dir, f"{out_file}_noise"), sim.noise)  # Noise
+        np.save(os.path.join(out_dir, f"{out_file}_r2"), sim.r2)  # R2
         np.save(
-            "{}/{}_innovation".format(out_dir, out_file), sim.innovation
+            os.path.join(out_dir, f"{out_file}_innovation"), sim.innovation
         )  # Innovation signal
 
     print("Simulated data generated! Your data is in: /{}".format(out_dir))

@@ -56,7 +56,6 @@ jobs:
           name: Running unit tests
           command: |
             source activate fMRIsim_py36
-            pwd
             make unittest
             mkdir /tmp/src/coverage
             mv /tmp/src/fMRIsim/.coverage /tmp/src/coverage/.coverage.py36
@@ -81,7 +80,6 @@ jobs:
           name: Running unit tests
           command: |
             # apt-get install -yqq make
-            conda info --envs
             source activate fMRIsim_py37  # depends on makeenv_37
             make unittest
             mkdir /tmp/src/coverage
