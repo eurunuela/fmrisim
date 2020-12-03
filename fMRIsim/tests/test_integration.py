@@ -8,8 +8,8 @@ def test_integration(skip_integration):
         pytest.skip("Skipping integration test")
 
     test_dir = os.getcwd()
-    os.mkdir(test_dir, "data")
     data_dir = os.path.join(test_dir, "data")
+    os.mkdir(data_dir)
     assert os.path.isdir(data_dir)
 
     fMRIsim_workflow(out_dir=data_dir, nxyz=[2, 2, 2])
