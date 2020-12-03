@@ -9,7 +9,7 @@ jobs:
 
   makeenv_37:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -22,7 +22,6 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            apt-get install -yqq conda
             if [[ -e /opt/conda/envs/py36_env ]]; then
               echo "Restoring environment from cache"
                 source activate fMRIsim_py37
@@ -38,7 +37,7 @@ jobs:
 
   unittest_36:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -47,7 +46,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            apt-get install -yqq make conda
+            apt-get install -yqq make
             if [ ! -d /opt/conda/envs/fMRIsim_py36 ]; then
               conda create -yq -n fMRIsim_py36 python=3.6
               source activate fMRIsim_py36
@@ -71,7 +70,7 @@ jobs:
 
   unittest_37:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -92,7 +91,7 @@ jobs:
 
   integrationtest_36:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -101,7 +100,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            apt-get install -yqq make conda
+            apt-get install -yqq make
             if [ ! -d /opt/conda/envs/fMRIsim_py36 ]; then
               conda create -yq -n fMRIsim_py36 python=3.6
               source activate fMRIsim_py36
@@ -124,7 +123,7 @@ jobs:
 
   integrationtest_37:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -148,7 +147,7 @@ jobs:
 
   style_check:
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     working_directory: /tmp/src/fMRIsim
     steps:
       - checkout
@@ -166,7 +165,7 @@ jobs:
   # build_docs:
   #   working_directory: /tmp/src/fMRIsim
   #   docker:
-  #     - image: continuumio/miniconda3
+  #     - image: nipype/nipype
   #   steps:
   #     - attach_workspace:  # get fMRIsim
   #         at: /tmp
@@ -185,7 +184,7 @@ jobs:
   merge_coverage:
     working_directory: /tmp/src/fMRIsim
     docker:
-      - image: afni/afni_circleci_executor
+      - image: nipype/nipype
     steps:
       - attach_workspace:
           at: /tmp
