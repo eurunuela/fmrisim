@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Generate environment
           command: |
-            if [[ -e /opt/miniconda-latest/envs/py36_env ]]; then
+            if [[ -e /opt/miniconda-latest/envs/fMRIsim_py37 ]]; then
               echo "Restoring environment from cache"
                 source activate fMRIsim_py37
             else
