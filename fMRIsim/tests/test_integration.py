@@ -8,7 +8,7 @@ def test_integration(skip_integration):
         pytest.skip("Skipping integration test")
 
     test_dir = os.getcwd()
-    data_dir = os.path.join(os.path.abspath(".."), "/data")
+    data_dir = os.path.join(os.path.abspath(".."), "data")
     os.mkdir(data_dir)
     assert os.path.isdir(data_dir)
 
