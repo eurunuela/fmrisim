@@ -7,11 +7,12 @@ def test_integration(skip_integration):
     if skip_integration:
         pytest.skip("Skipping integration test")
 
-    fMRIsim_workflow(nxyz=[2, 2, 2])
-
     test_dir = os.getcwd()
+    os.mkdir(test_dir, "data")
     data_dir = os.path.join(test_dir, "data")
     assert os.path.isdir(data_dir)
+
+    fMRIsim_workflow(out_dir=data_dir, nxyz=[2, 2, 2])
 
     name_ext_list = ["bold", "data", "noise"]
     for ext in name_ext_list:
