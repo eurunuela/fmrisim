@@ -1,3 +1,4 @@
+"""Create the HRF matrix"""
 import subprocess
 
 import numpy as np
@@ -6,6 +7,20 @@ import scipy.stats
 
 
 def hrf_linear(RT, p):
+    """[summary]
+
+    Parameters
+    ----------
+    RT : [type]
+        [description]
+    p : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     # Returns a hemodynamic response function
     # FORMAT hrf <- myHRF(RT,[p])
 
@@ -57,6 +72,20 @@ def hrf_linear(RT, p):
 
 
 def hrf_afni(tr, lop_hrf):
+    """[summary]
+
+    Parameters
+    ----------
+    tr : [type]
+        [description]
+    lop_hrf : [type]
+        [description]
+
+    Returns
+    -------
+    [type]
+        [description]
+    """
     dur_hrf = 8
     last_hrf_sample = 1
     #  Increases duration until last HRF sample is zero
@@ -110,7 +139,13 @@ class HRFMatrix:
         self.has_integrator = has_integrator
 
     def generate_hrf(self):
+        """[summary]
 
+        Returns
+        -------
+        [type]
+            [description]
+        """
         if self.hrf_path is None and self.is_afni:
             hrf_SPM = hrf_afni(self.TR, self.lop_hrf)
         elif self.hrf_path is not None:

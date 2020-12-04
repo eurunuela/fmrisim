@@ -24,8 +24,8 @@ jobs:
           command: |
             if [[ -e /opt/miniconda-latest/envs/fMRIsim_py37 ]]; then
               echo "Restoring environment from cache"
-                source /etc/afni/afni.sh
-                source activate fMRIsim_py37
+              source /etc/afni/afni.sh
+              source activate fMRIsim_py37
             else
               source /etc/afni/afni.sh
               conda create -yq -n fMRIsim_py37 python=3.7
@@ -83,6 +83,7 @@ jobs:
           name: Running unit tests
           command: |
             # apt-get install -yqq make
+            source /etc/afni/afni.sh
             source activate fMRIsim_py37  # depends on makeenv_37
             make unittest
             mkdir /tmp/src/coverage
@@ -138,6 +139,7 @@ jobs:
           no_output_timeout: 10m
           command: |
             # apt-get install -yqq make
+            source /etc/afni/afni.sh
             source activate fMRIsim_py37  # depends on makeenv_37
             make integration
             mkdir /tmp/src/coverage

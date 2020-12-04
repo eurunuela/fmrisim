@@ -31,7 +31,53 @@ def fMRIsim_workflow(
     npy=False,
     history="",
 ):
+    """[summary]
 
+    Parameters
+    ----------
+    out_file : str, optional
+        [description], by default "simulation"
+    out_dir : str, optional
+        [description], by default "data"
+    length : str, optional
+        [description], by default "mix"
+    nxyz : list, optional
+        [description], by default [1, 1, 1]
+    duration : int, optional
+        [description], by default 400
+    tr : int, optional
+        [description], by default 2
+    te : [type], optional
+        [description], by default None
+    nevents : int, optional
+        [description], by default 2
+    gap : int, optional
+        [description], by default 10
+    maxlength : [type], optional
+        [description], by default None
+    minlength : [type], optional
+        [description], by default None
+    group : [type], optional
+        [description], by default None
+    afni : bool, optional
+        [description], by default False
+    hrfmodel : str, optional
+        [description], by default "SPMG1"
+    hrfpath : [type], optional
+        [description], by default None
+    tesla : int, optional
+        [description], by default 3
+    no_noise : bool, optional
+        [description], by default False
+    snr : int, optional
+        [description], by default 10
+    motpath : [type], optional
+        [description], by default None
+    npy : bool, optional
+        [description], by default False
+    history : str, optional
+        [description], by default ""
+    """
     if te is None:
         te = [1]
 
