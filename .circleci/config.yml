@@ -26,7 +26,6 @@ jobs:
               echo "Restoring environment from cache"
                 source activate fMRIsim_py37
             else
-              source /neurodocker/startup.sh
               conda create -yq -n fMRIsim_py37 python=3.7
               source activate fMRIsim_py37
               pip install -e ".[test,doc]"
@@ -56,7 +55,7 @@ jobs:
       - run:
           name: Running unit tests
           command: |
-            source /neurodocker/startup.sh
+            source /etc/afni/afni.sh
             source activate fMRIsim_py36
             make unittest
             mkdir /tmp/src/coverage
@@ -112,7 +111,7 @@ jobs:
           name: Run integration tests
           no_output_timeout: 10m
           command: |
-            source /neurodocker/startup.sh
+            source /etc/afni/afni.sh
             source activate fMRIsim_py36
             make integration
             mkdir /tmp/src/coverage
