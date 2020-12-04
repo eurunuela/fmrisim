@@ -24,8 +24,10 @@ jobs:
           command: |
             if [[ -e /opt/miniconda-latest/envs/fMRIsim_py37 ]]; then
               echo "Restoring environment from cache"
+                source /etc/afni/afni.sh
                 source activate fMRIsim_py37
             else
+              source /etc/afni/afni.sh
               conda create -yq -n fMRIsim_py37 python=3.7
               source activate fMRIsim_py37
               pip install -e ".[test,doc]"
