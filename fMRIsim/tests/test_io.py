@@ -1,7 +1,8 @@
-from nibabel import test
-import numpy as np
 import os
 import subprocess
+
+import numpy as np
+from nibabel import test
 
 from fMRIsim import io
 
@@ -58,7 +59,11 @@ def test_export_volume(testpath):
     out_file = os.path.join(testpath, filename)
     assert os.path.isfile(out_file)
 
-    info = subprocess.check_output(f"3dinfo {os.path.join(testpath, filename)}", shell=True, universal_newlines=True)
+    info = subprocess.check_output(
+        f"3dinfo {os.path.join(testpath, filename)}",
+        shell=True,
+        universal_newlines=True,
+    )
     assert history in info
 
     nvoxels = subprocess.check_output(
