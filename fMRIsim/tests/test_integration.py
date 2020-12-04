@@ -12,7 +12,7 @@ def test_integration(skip_integration):
     os.mkdir(data_dir)
     assert os.path.isdir(data_dir)
 
-    fMRIsim_workflow(out_dir=data_dir, nxyz=[2, 2, 2])
+    fMRIsim_workflow(out_dir=data_dir, nxyz=[2, 2, 2], afni=True)
 
     name_ext_list = ["bold", "data", "noise"]
     for ext in name_ext_list:
