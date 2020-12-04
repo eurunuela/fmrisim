@@ -116,8 +116,8 @@ def hrf_afni(tr, lop_hrf):
 
 
 class HRFMatrix:
-    """[summary].
-    """
+    """[summary]."""
+
     def __init__(
         self,
         TR=2,

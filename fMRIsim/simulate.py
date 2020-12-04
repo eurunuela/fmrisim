@@ -14,8 +14,8 @@ def _gram_schmidt_columns(X):
 
 
 class fMRIsim:
-    """[summary].
-    """
+    """[summary]."""
+
     def __init__(
         self,
         event_length="mix",
@@ -232,8 +232,7 @@ class fMRIsim:
         return noise
 
     def simulate(self):
-        """[summary].
-        """
+        """[summary]."""
         # Variable initialization
         self.te = np.asarray(self.te)
         self.te = self.te / 1000
