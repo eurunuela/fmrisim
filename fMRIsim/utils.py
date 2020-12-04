@@ -1,4 +1,4 @@
-"""Util functions for fMRIsim"""
+"""Util functions for fMRIsim."""
 import os.path as op
 
 

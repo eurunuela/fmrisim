@@ -1,4 +1,4 @@
-#!/usr/bin/python
+"""Main."""
 import os
 import shutil
 
@@ -31,7 +31,7 @@ def fMRIsim_workflow(
     npy=False,
     history="",
 ):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -105,9 +105,9 @@ def fMRIsim_workflow(
         sim.group = sim.nvoxels
     else:
         sim.group = group
-    try:
+    if type(sim.group) is list:
         sim.ngroups = len(sim.group)
-    except:
+    else:
         sim.ngroups = 1
 
     sim.simulate()

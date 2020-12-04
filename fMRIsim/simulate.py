@@ -1,3 +1,4 @@
+"""Simulation script."""
 import os
 import random
 
@@ -13,6 +14,8 @@ def _gram_schmidt_columns(X):
 
 
 class fMRIsim:
+    """[summary].
+    """
     def __init__(
         self,
         event_length="mix",
@@ -36,7 +39,51 @@ class fMRIsim:
         motion=0.05,
         mot_path=None,
     ):
+        """[summary].
 
+        Parameters
+        ----------
+        event_length : str, optional
+            [description], by default "mix"
+        nvoxels : int, optional
+            [description], by default 1
+        dur : int, optional
+            [description], by default 400
+        TR : int, optional
+            [description], by default 2
+        db : int, optional
+            [description], by default 10
+        nevents : int, optional
+            [description], by default 1
+        gap : int, optional
+            [description], by default 5
+        TE : [type], optional
+            [description], by default None
+        is_afni : bool, optional
+            [description], by default True
+        lop_hrf : str, optional
+            [description], by default "SPMG1"
+        hrf_path : [type], optional
+            [description], by default None
+        has_integrator : bool, optional
+            [description], by default True
+        tesla : int, optional
+            [description], by default 3
+        noise : bool, optional
+            [description], by default True
+        max_length : [type], optional
+            [description], by default None
+        min_length : [type], optional
+            [description], by default None
+        group : int, optional
+            [description], by default 1
+        ngroups : int, optional
+            [description], by default 1
+        motion : float, optional
+            [description], by default 0.05
+        mot_path : [type], optional
+            [description], by default None
+        """
         # Parameters for signal creation
         self.length = event_length
         self.nvoxels = nvoxels
@@ -67,6 +114,13 @@ class fMRIsim:
         self.mot_path = mot_path
 
     def _add_noise(self):
+        """[summary].
+
+        Returns
+        -------
+        [type]
+            [description]
+        """
         # Noise due to motion
         self.percent_motion = 0.05  # percentage of noise that it is due to motion
         resources_dir = get_resource_path()
@@ -83,17 +137,17 @@ class fMRIsim:
         # (1.5T with TE=50ms = 0.02, 3T with TE=35=0.03, 7T with TE=25ms = 0.06)
         # Consider mean of signal = 1, then sigma_noise = 1/db
         self.S = 1
-        if self.tesla is 1.5:
+        if self.tesla == 1.5:
             self.DeltaStoS = 0.02
             par_sps0 = np.array([5.013e-6, 2.817, 0.397])
-        elif self.tesla is 3:
+        elif self.tesla == 3:
             self.DeltaStoS = 0.04
             par_sps0 = np.array([6.42e-12, 5.962, 0.59])
-        elif self.tesla is 7:
+        elif self.tesla == 7:
             self.DeltaStoS = 0.06
             par_sps0 = np.array([1.34e-14, 7.38, 0.9625])
 
-        CNR = self.db * self.DeltaStoS
+        # CNR = self.db * self.DeltaStoS
         # The relationship between physiological noise and thermal noise at
         # different voxels sizes
         # Taken from Triantafyllou at 1x1x3 (1.5T=0.34, 3T=0.57, 7T = 0.91)
@@ -178,7 +232,8 @@ class fMRIsim:
         return noise
 
     def simulate(self):
-
+        """[summary].
+        """
         # Variable initialization
         self.te = np.asarray(self.te)
         self.te = self.te / 1000
@@ -352,8 +407,8 @@ class fMRIsim:
             else:
                 temp_noise = 0
 
-            tSNR = np.mean(temp_noise) / np.std(temp_noise)
-            tCNR = self.DeltaStoS * tSNR
+            # tSNR = np.mean(temp_noise) / np.std(temp_noise)
+            # tCNR = self.DeltaStoS * tSNR
 
             # print(f'tSNRideal = {self.db}')
             # print(f'tSNR = {tSNR}')

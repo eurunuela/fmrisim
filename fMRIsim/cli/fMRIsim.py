@@ -1,3 +1,4 @@
+"""CLI."""
 import argparse
 import datetime
 import getpass
@@ -53,7 +54,8 @@ def _get_parser():
         dest="nxyz",
         default=[1, 1, 1],
         help=(
-            "Number of voxels to simulate in X, Y and Z (it must be a list of integers). Default is 1 1 1."
+            "Number of voxels to simulate in X, Y and Z (it must be a list of integers). "
+            "Default is 1 1 1."
         ),
         type=int,
         nargs="+",
@@ -202,7 +204,7 @@ def _get_parser():
 
 
 def _main(argv=None):
-    """Entry point for aroma CLI."""
+    """Entry point for fMRIsim CLI."""
     options = _get_parser().parse_args(argv)
     args_str = str(options)[9:]
     history_str = "[{username}@{hostname}: {date}] fMRIsim with {arguments}".format(

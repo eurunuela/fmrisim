@@ -1,4 +1,4 @@
-"""I/O for fMRIsim"""
+"""I/O for fMRIsim."""
 import os
 import subprocess
 
@@ -7,7 +7,7 @@ import numpy as np
 
 
 def reshape2Dto4D(signal2d, dims):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def reshape2Dto4D(signal2d, dims):
 
 
 def generate_header(dims, path):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -52,7 +52,7 @@ def generate_header(dims, path):
 
 
 def read_header(path, filename):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -72,7 +72,7 @@ def read_header(path, filename):
 
 
 def export_volume(vol_2d, dims, path, filename, history):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------

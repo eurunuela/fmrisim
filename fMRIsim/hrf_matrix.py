@@ -1,4 +1,4 @@
-"""Create the HRF matrix"""
+"""Create the HRF matrix."""
 import subprocess
 
 import numpy as np
@@ -7,7 +7,7 @@ import scipy.stats
 
 
 def hrf_linear(RT, p):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -72,7 +72,7 @@ def hrf_linear(RT, p):
 
 
 def hrf_afni(tr, lop_hrf):
-    """[summary]
+    """[summary].
 
     Parameters
     ----------
@@ -91,9 +91,9 @@ def hrf_afni(tr, lop_hrf):
     #  Increases duration until last HRF sample is zero
     while last_hrf_sample != 0:
         dur_hrf = 2 * dur_hrf
-        npoints_hrf = np.round(dur_hrf, tr)
         hrf_command = (
-            "3dDeconvolve -x1D_stop -nodata %d %f -polort -1 -num_stimts 1 -stim_times 1 '1D:0' '%s' -quiet -x1D stdout: | 1deval -a stdin: -expr 'a'"
+            "3dDeconvolve -x1D_stop -nodata %d %f -polort -1 -num_stimts 1 "
+            "-stim_times 1 '1D:0' '%s' -quiet -x1D stdout: | 1deval -a stdin: -expr 'a'"
             % (dur_hrf, tr, lop_hrf)
         )
         hrf_tr_str = subprocess.check_output(
@@ -103,7 +103,8 @@ def hrf_afni(tr, lop_hrf):
         last_hrf_sample = hrf_tr[len(hrf_tr) - 1]
         if last_hrf_sample != 0:
             print(
-                "Duration of HRF was not sufficient for specified model. Doubling duration and computing again."
+                "Duration of HRF was not sufficient for specified model. "
+                "Doubling duration and computing again."
             )
 
     #  Removes tail of zero samples
@@ -115,6 +116,8 @@ def hrf_afni(tr, lop_hrf):
 
 
 class HRFMatrix:
+    """[summary].
+    """
     def __init__(
         self,
         TR=2,
@@ -129,6 +132,33 @@ class HRFMatrix:
         lambda_fusion=3,
         gamma_weights=0.5,
     ):
+        """[summary].
+
+        Parameters
+        ----------
+        TR : int, optional
+            [description], by default 2
+        TE : [type], optional
+            [description], by default None
+        nscans : int, optional
+            [description], by default 200
+        r2only : int, optional
+            [description], by default 1
+        is_afni : bool, optional
+            [description], by default True
+        lop_hrf : str, optional
+            [description], by default "SPMG1"
+        path : [type], optional
+            [description], by default None
+        has_integrator : bool, optional
+            [description], by default False
+        wfusion : bool, optional
+            [description], by default False
+        lambda_fusion : int, optional
+            [description], by default 3
+        gamma_weights : float, optional
+            [description], by default 0.5
+        """
         self.TR = TR
         self.TE = TE
         self.nscans = nscans
@@ -139,7 +169,7 @@ class HRFMatrix:
         self.has_integrator = has_integrator
 
     def generate_hrf(self):
-        """[summary]
+        """[summary].
 
         Returns
         -------
