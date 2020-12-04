@@ -127,10 +127,7 @@ class HRFMatrix:
         is_afni=True,
         lop_hrf="SPMG1",
         path=None,
-        has_integrator=False,
-        wfusion=False,
-        lambda_fusion=3,
-        gamma_weights=0.5,
+        has_integrator=False
     ):
         """[summary].
 
