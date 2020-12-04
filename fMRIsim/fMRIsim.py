@@ -4,7 +4,7 @@ import shutil
 
 import numpy as np
 
-import fMRIsim.volumes as vol
+import fMRIsim.io as vol
 from fMRIsim.simulate import fMRIsim
 
 
