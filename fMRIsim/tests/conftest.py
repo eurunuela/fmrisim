@@ -13,3 +13,9 @@ def pytest_addoption(parser):
 @pytest.fixture
 def skip_integration(request):
     return request.config.getoption("--skipintegration")
+
+
+@pytest.fixture(scope='session')
+def testpath(tmp_path_factory):
+    """ Test path that will be used to download all files """
+    return tmp_path_factory.getbasetemp()
