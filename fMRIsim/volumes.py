@@ -21,16 +21,12 @@ def reshape2Dto4D(signal2d, dims):
 
 def generate_header(dims, path):
 
-    print(path)
-
     subprocess.run(
         "3dEmpty -nxyz {} {} {} -nt {} -prefix {}/{} -overwrite".format(
-            dims[0], dims[1], dims[2], dims[3], path, "empty.nii.gz"
+            dims[0], dims[1], dims[2], dims[3], path, "empty"
         ),
         shell=True,
     )
-
-    print(os.listdir(path))
 
 
 def read_header(path, filename):
@@ -52,7 +48,7 @@ def export_volume(vol_2d, dims, path, filename, history):
     generate_header(dims, path)
 
     # Read header file
-    header = read_header(path, "empty.nii.gz")
+    header = read_header(path, "empty+orig.HEAD")
 
     print("Saving image...")
     img = nib.nifti1.Nifti1Image(vol_4d, None, header=header)
