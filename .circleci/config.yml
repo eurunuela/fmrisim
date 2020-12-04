@@ -200,7 +200,7 @@ jobs:
       - run:
           name: Merge coverage files
           command: |
-            apt-get install -yqq curl
+            # apt-get install -yqq curl
             source activate fMRIsim_py37  # depends on makeenv37
             cd /tmp/src/coverage/
             coverage combine
