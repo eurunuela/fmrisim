@@ -1,8 +1,9 @@
 import os
 
+import pytest
+
 from fMRIsim.fMRIsim import fMRIsim_workflow
 
-import pytest
 
 def test_integration(skip_integration, testpath):
     if skip_integration:
