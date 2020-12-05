@@ -47,7 +47,8 @@ def generate_header(dims, path):
         [description]
     """
     subprocess.run(
-        f"3dEmpty -nxyz {dims[0]} {dims[1]} {dims[2]} -nt {dims[3]} -prefix {path}/{'empty'} -overwrite",
+        f"3dEmpty -nxyz {dims[0]} {dims[1]} {dims[2]} -nt {dims[3]} -prefix "
+        f"{path}/{'empty'} -overwrite",
         shell=True,
     )
 

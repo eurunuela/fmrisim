@@ -8,8 +8,11 @@ from fMRIsim import _version
 
 
 def check_string(str_container, str_to_find, str_expected, is_num=True):
-    idx = [log_idx for log_idx, log_str in enumerate(
-                      str_container) if str_to_find in log_str]
+    idx = [
+        log_idx
+        for log_idx, log_str in enumerate(str_container)
+        if str_to_find in log_str
+    ]
     str_found = str_container[idx[0]]
     if is_num:
         num_found = re.findall(r"[-+]?\d*\.\d+|\d+", str_found)
@@ -27,13 +30,13 @@ def test_integration(skip_integration, testpath):
     subprocess.run(command, shell=True, check=True)
 
     # Read logger file
-    logger_file = glob.glob(os.path.join(testpath, 'fMRIsim*'))[0]
+    logger_file = glob.glob(os.path.join(testpath, "fMRIsim*"))[0]
     with open(logger_file) as logger_info:
         logger_info = logger_info.readlines()
 
     # Get version info
-    version_number = _version.get_versions()['version']
-    assert check_string(logger_info, 'fMRIsim version', version_number, is_num=False)
+    version_number = _version.get_versions()["version"]
+    assert check_string(logger_info, "fMRIsim version", version_number, is_num=False)
 
     name_ext_list = ["bold", "data", "noise"]
     for ext in name_ext_list:

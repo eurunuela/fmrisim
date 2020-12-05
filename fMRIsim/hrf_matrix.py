@@ -8,6 +8,7 @@ import scipy.stats
 
 LGR = logging.getLogger(__name__)
 
+
 def hrf_linear(RT, p):
     """[summary].
 
@@ -129,7 +130,7 @@ class HRFMatrix:
         is_afni=True,
         lop_hrf="SPMG1",
         path=None,
-        has_integrator=False
+        has_integrator=False,
     ):
         """[summary].
 

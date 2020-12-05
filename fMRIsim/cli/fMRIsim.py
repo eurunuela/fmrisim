@@ -1,7 +1,6 @@
 """CLI."""
 import argparse
 import datetime
-from fMRIsim.simulate import fMRIsim
 import getpass
 import socket
 
