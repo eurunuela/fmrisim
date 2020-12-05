@@ -1,9 +1,12 @@
 """I/O for fMRIsim."""
+import logging
 import os
 import subprocess
 
 import nibabel as nib
 import numpy as np
+
+LGR = logging.getLogger(__name__)
 
 
 def reshape2Dto4D(signal2d, dims):
@@ -44,9 +47,7 @@ def generate_header(dims, path):
         [description]
     """
     subprocess.run(
-        "3dEmpty -nxyz {} {} {} -nt {} -prefix {}/{} -overwrite".format(
-            dims[0], dims[1], dims[2], dims[3], path, "empty"
-        ),
+        f"3dEmpty -nxyz {dims[0]} {dims[1]} {dims[2]} -nt {dims[3]} -prefix {path}/{'empty'} -overwrite",
         shell=True,
     )
 
@@ -99,17 +100,17 @@ def export_volume(vol_2d, dims, path, filename, history):
     # Read header file
     header = read_header(path, "empty+orig.HEAD")
 
-    print("Saving image...")
+    LGR.info("Saving image...")
     img = nib.nifti1.Nifti1Image(vol_4d, None, header=header)
     img_filename = os.path.join(path, f"{filename}.nii.gz")
     nib.save(img, img_filename)
-    print("Image {} saved.".format(img_filename))
+    LGR.info(f"Image {img_filename} saved.")
 
     # subprocess.run('3dcopy {} {} -overwrite'.format(img_filename,
     #                                                 img_filename),
     #                shell=True)
 
     if history is not None:
-        print("Updating file history...")
-        subprocess.run('3dNotes -h "{}" {}'.format(history, img_filename), shell=True)
-        print("File history updated.")
+        LGR.info("Updating file history...")
+        subprocess.run(f'3dNotes -h "{history}" {img_filename}', shell=True)
+        LGR.info("File history updated.")

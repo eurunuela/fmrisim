@@ -1,10 +1,12 @@
 """CLI."""
 import argparse
 import datetime
+from fMRIsim.simulate import fMRIsim
 import getpass
 import socket
 
 from fMRIsim import __version__
+from fMRIsim.fMRIsim import fMRIsim_workflow
 
 
 def _get_parser():
@@ -216,6 +218,7 @@ def _main(argv=None):
 
     kwargs = vars(options)
     kwargs["history"] = history_str
+    fMRIsim_workflow(**kwargs)
 
 
 if __name__ == "__main__":

@@ -1,11 +1,16 @@
 """Main."""
+import datetime
+import logging
 import os
 import shutil
 
 import numpy as np
 
+from fMRIsim import _version
 import fMRIsim.io as vol
 from fMRIsim.simulate import fMRIsim
+
+LGR = logging.getLogger(__name__)
 
 
 def fMRIsim_workflow(
@@ -78,6 +83,38 @@ def fMRIsim_workflow(
     history : str, optional
         [description], by default ""
     """
+    if type(out_dir) is list:
+        out_dir = out_dir[0]
+
+    # Check if temp directory exists
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)  # Generate new dir
+    else:
+        shutil.rmtree(out_dir)  # Remove dir for a clean start
+        os.mkdir(out_dir)  # Generate new dir
+
+    # Create logfile name
+    basename = 'fMRIsim_'
+    extension = 'tsv'
+    isotime = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
+    logname = os.path.join(out_dir, (basename + isotime + '.' + extension))
+
+    # Set logging format
+    log_formatter = logging.Formatter(
+        '%(asctime)s\t%(name)-12s\t%(levelname)-8s\t%(message)s',
+        datefmt='%Y-%m-%dT%H:%M:%S')
+
+    # Set up logging file and open it for writing
+    log_handler = logging.FileHandler(logname)
+    log_handler.setFormatter(log_formatter)
+    sh = logging.StreamHandler()
+
+    logging.basicConfig(level=logging.INFO,
+                        handlers=[log_handler, sh], format='%(levelname)-10s %(message)s')
+
+    version_number = _version.get_versions()['version']
+    LGR.info(f'Currently running fMRIsim version {version_number}')
+
     if te is None:
         te = [1]
 
@@ -113,13 +150,6 @@ def fMRIsim_workflow(
     sim.simulate()
 
     dims = np.array(nxyz)
-
-    # Check if temp directory exists
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)  # Generate new dir
-    else:
-        shutil.rmtree(out_dir)  # Remove dir for a clean start
-        os.mkdir(out_dir)  # Generate new dir
 
     # Saving simulations
     for te_idx in range(len(sim.te)):
@@ -171,4 +201,4 @@ def fMRIsim_workflow(
             os.path.join(out_dir, f"{out_file}_innovation"), sim.innovation
         )  # Innovation signal
 
-    print("Simulated data generated! Your data is in: /{}".format(out_dir))
+    LGR.info(f"Simulated data generated! Your data is in: {out_dir}")

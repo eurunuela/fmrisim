@@ -1,4 +1,5 @@
 """Simulation script."""
+import logging
 import os
 import random
 
@@ -6,6 +7,8 @@ import numpy as np
 
 from fMRIsim.hrf_matrix import HRFMatrix
 from fMRIsim.utils import get_resource_path
+
+LGR = logging.getLogger(__name__)
 
 
 def _gram_schmidt_columns(X):
@@ -250,8 +253,8 @@ class fMRIsim:
             group_change_idxs[1:] = np.cumsum(self.group) - 1
             group_label = 0
 
-            print(f"Groups: {self.group}")
-            print(f"Group change idxs: {group_change_idxs}")
+            LGR.info(f"Groups: {self.group}")
+            LGR.info(f"Group change idxs: {group_change_idxs}")
 
             for voxidx in range(self.nvoxels):
                 if group_label < len(group_change_idxs) - 1:
@@ -355,12 +358,12 @@ class fMRIsim:
                     else:
                         self.r2[:, voxidx] = self.r2[:, voxidx - 1].copy()
 
-                print("Voxel {}/{} simulated...".format(voxidx + 1, self.nvoxels))
+                LGR.info("Voxel {}/{} simulated...".format(voxidx + 1, self.nvoxels))
 
             if group_change_idxs[1] - group_change_idxs[0] == 1:
                 self.r2[:, 0] = self.r2[:, 1].copy()
 
-        print("Saving simulated data...")
+        LGR.info("Saving simulated data...")
 
         # Gets innovation signal
         self.innovation[: self.nscans - 1, :] = self.r2[1:, :]
